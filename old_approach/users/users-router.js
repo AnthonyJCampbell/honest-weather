@@ -3,8 +3,9 @@ const bcrypt = require('bcryptjs')
 const Users = require('./users-model.js');
 
 const check_credentials = require('../middlewares/check-credentials.js')
+const restricted = require('../middlewares/restricted')
 
-router.get('/', (req, res) => {
+router.get('/', restricted, (req, res) => {
   Users.find()
     .then(users => {
       res.json(users);
