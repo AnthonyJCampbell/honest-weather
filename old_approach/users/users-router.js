@@ -2,12 +2,15 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs')
 const Users = require('./users-model.js');
 
+const restricted = require('../middlewares/restricted')
+
 router.get('/', restricted, (req, res) => {
-    Users.find()
-        .then(users => {
-            res.json(users);
-        })
-        .catch(err => res.send(err));
+    const users = {"message": "It's working, you're getting users!!"}
+    // Users.find()
+        // .then(users => {
+    res.json(users);
+        // })
+        // .catch(err => res.send(err));
 });
 
 router.post('/register', (req, res) => {
@@ -34,14 +37,14 @@ router.get('/hash', (req, res) => {
     res.status(200).json({ hash })
 })
 
-function restricted(req, res, next) {
-    let { username, password } = req.headers
+// function restricted(req, res, next) {
+//     let { username, password } = req.headers
 
-    if (username && password) {
-        next()
-    } else {
-        res.status(400).json({ "message": "Please provide valid credentials" })
-    }
-}
+//     if (username && password) {
+//         next()
+//     } else {
+//         res.status(400).json({ "message": "Please provide valid credentials" })
+//     }
+// }
 
 module.exports = router;
