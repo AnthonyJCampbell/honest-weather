@@ -2,8 +2,9 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs')
 const Users = require('./users-model.js');
 
-router.get('/', restricted, (req, res) => {
-  console.log("hetting here")
+const check_credentials = require('../middlewares/check-credentials.js')
+
+router.get('/', (req, res) => {
   Users.find()
     .then(users => {
       res.json(users);
@@ -11,13 +12,13 @@ router.get('/', restricted, (req, res) => {
     .catch(err => res.send(err));
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', check_credentials, (req, res) => {
   let user = req.body;
 
   const hash = bcrypt.hashSync(user.password, 12)
 
   user.password = hash;
-
+  
   Users.add(user)
     .then(saved => {
       res.status(201).json(saved)
@@ -35,14 +36,5 @@ router.get('/hash', (req, res) => {
   res.status(200).json({hash})
 })
 
-function restricted(req, res, next) {
-  let {username, password} = req.body
-
-  if (username && password) {
-    next()
-  } else {
-    res.status(400).json({"message": "Please provide valid credentials"})
-  }
-}
 
 module.exports = router;
