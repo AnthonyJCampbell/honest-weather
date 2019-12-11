@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const Users = require('./users-model.js');
 
 router.get('/', restricted, (req, res) => {
+  console.log("hetting here")
   Users.find()
     .then(users => {
       res.json(users);
@@ -35,7 +36,7 @@ router.get('/hash', (req, res) => {
 })
 
 function restricted(req, res, next) {
-  let {username, password} = req.headers
+  let {username, password} = req.body
 
   if (username && password) {
     next()
